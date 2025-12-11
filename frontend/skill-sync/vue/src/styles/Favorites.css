@@ -1,0 +1,107 @@
+/* --- 1. Variables --- */
+:root {
+  --fav-bg: #f1f5f9;
+  --fav-surface: #ffffff;
+  --fav-text: #0f172a;
+  --fav-border: #cbd5e1;
+  --fav-primary: #3b82f6;
+}
+
+body.dark-mode {
+  --fav-bg: #0f172a;        /* Deep Slate 900 */
+  --fav-surface: #1e293b;   /* Slate 800 */
+  --fav-text: #f8fafc;
+  --fav-border: #334155;
+}
+
+/* --- 2. Main Section (UPDATED BACKGROUND) --- */
+#favorites.fav-section {
+  width: 100%;
+  min-height: 100vh;
+  padding: 4rem 1rem;
+  
+  /* Base Color */
+  background-color: var(--fav-bg);
+  
+  /* Majestic Glowing Gradients */
+  background-image: 
+    /* Top Left: Soft Primary Blue Glow */
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    /* Bottom Right: Royal Purple/Violet Glow (Adds the "Majestic" feel) */
+    radial-gradient(circle at 90% 90%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+    /* Center: Very subtle Cyan highlight for depth */
+    radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+    
+  /* Keeps the background fixed while scrolling for a premium feel */
+  background-attachment: fixed;
+  
+  color: var(--fav-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+.fav-container { max-width: 1000px; margin: 0 auto; }
+
+/* --- 3. Typography & Header --- */
+.fav-header h2 { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+.fav-highlight { color: var(--fav-primary); text-shadow: 0 0 20px rgba(59, 130, 246, 0.3); } /* Added text glow */
+.fav-header p { color: var(--fav-text); opacity: 0.7; margin-bottom: 2rem; font-size: 1.1rem; }
+
+/* --- 4. Tabs --- */
+.fav-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--fav-border); padding-bottom: 1rem; }
+.fav-tab {
+  background: transparent; border: none; font-size: 1rem; font-weight: 600;
+  color: var(--fav-text); opacity: 0.5; cursor: pointer; padding: 0.5rem 1rem;
+  transition: all 0.2s;
+}
+.fav-tab:hover { opacity: 0.8; }
+.fav-tab.active { opacity: 1; color: var(--fav-primary); border-bottom: 2px solid var(--fav-primary); }
+
+/* --- 5. Grid Layout --- */
+.fav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+
+/* --- 6. Cards --- */
+.fav-card {
+  background: var(--fav-surface);
+  border: 1px solid var(--fav-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Subtle default shadow */
+}
+
+.fav-card:hover { 
+  transform: translateY(-5px); 
+  border-color: var(--fav-primary); 
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); /* Deep shadow on hover */
+}
+
+/* Resource Accent Glows (Matches Downloads) */
+.resource-card.pdf-accent:hover { border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.15); }
+.resource-card.zip-accent:hover { border-color: #8b5cf6; box-shadow: 0 0 20px rgba(139, 92, 246, 0.15); }
+
+.fav-type-badge {
+  font-size: 0.7rem; text-transform: uppercase; font-weight: 700;
+  background: rgba(59, 130, 246, 0.1); color: var(--fav-primary);
+  padding: 4px 8px; border-radius: 4px; display: inline-block; margin-bottom: 0.8rem;
+}
+
+.fav-card h3 { font-size: 1.1rem; margin: 0 0 0.5rem 0; color: var(--fav-text); }
+.fav-card p { font-size: 0.9rem; margin: 0 0 1.5rem 0; opacity: 0.7; }
+
+/* --- 7. Buttons --- */
+.fav-remove-btn {
+  width: 100%; padding: 0.6rem; border-radius: 6px; cursor: pointer;
+  background: transparent; border: 1px solid var(--fav-border); color: var(--fav-text);
+  font-size: 0.9rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+}
+.fav-remove-btn:hover { background: #ef4444; color: white; border-color: #ef4444; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3); }
+
+/* --- 8. Empty State --- */
+.fav-empty {
+  grid-column: 1 / -1; text-align: center; padding: 4rem;
+  color: var(--fav-text); opacity: 0.5; display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+.fav-empty i { font-size: 3rem; }

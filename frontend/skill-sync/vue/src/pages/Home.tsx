@@ -1,0 +1,74 @@
+import { useEffect, useState } from "react";
+import "../styles/Home.css";
+import LoginModal from "../components/ui/LoginModal";
+import Navbar from "../components/layout/Navbar";
+import Footer from "../components/layout/Footer";
+import DashboardSection from "../components/Sections/Dashboard";
+import Video from "../components/Sections/Video.tsx";
+import DownloadsSection from "../components/Sections/Downloads";
+import FavoritesSection from "../components/Sections/Favorites";
+import CommunitySection from "../components/Sections/Community";
+import SubmitSection from "../components/Sections/Submit";
+import type { PageId } from "../Types/navigation";
+import GeminiChatbot from "../components/chatbot/GeminiChatbot";
+
+const OpenAccess = () => {
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return (
+      typeof window !== "undefined" &&
+      localStorage.getItem("theme") === "dark"
+    );
+  });
+
+  const [activePage, setActivePage] = useState<PageId>("dashboard");
+  const [showLogin, setShowLogin] = useState(false);
+
+  const handleNavClick = (page: PageId) => {
+    setActivePage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleThemeToggle = () => {
+    setDarkMode((prev) => !prev);
+  };
+
+  const handleOpenLogin = () => setShowLogin(true);
+  const handleCloseLogin = () => setShowLogin(false);
+
+  useEffect(() => {
+    document.body.classList.toggle("dark-mode", darkMode);
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
+  return (
+    <>
+      <Navbar
+        activePage={activePage}
+        darkMode={darkMode}
+        onNavClick={handleNavClick}
+        onToggleTheme={handleThemeToggle}
+        onOpenLogin={handleOpenLogin}
+      />
+
+      <DashboardSection
+        isActive={activePage === "dashboard"}
+        onGoToSubmit={() => handleNavClick("submit")}
+      />
+      <Video isActive={activePage === "videos"} />
+      <DownloadsSection isActive={activePage === "downloads"} />
+      <FavoritesSection isActive={activePage === "favorites"} />
+      <CommunitySection isActive={activePage === "community"} />
+      <SubmitSection isActive={activePage === "submit"} />
+
+      <Footer />
+
+      {showLogin && <LoginModal onClose={handleCloseLogin} />}
+      <div className="chatbot-wrapper">
+      <GeminiChatbot />
+    </div>
+      
+    </>
+  );
+};
+
+export default OpenAccess;
