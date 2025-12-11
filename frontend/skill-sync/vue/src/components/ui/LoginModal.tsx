@@ -15,7 +15,13 @@ function LoginModal({ onClose, onSuccess }: LoginModalProps) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const API_URL = "http://localhost:3000/users";
+  // Demo credentials for showcase
+  const DEMO_USER = {
+    id: 1,
+    name: "Demo User",
+    email: "demo@example.com",
+    password: "password123"
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,64 +29,40 @@ function LoginModal({ onClose, onSuccess }: LoginModalProps) {
     setSuccess("");
     setLoading(true);
 
+    // Simulate network delay for realistic feel
+    await new Promise(resolve => setTimeout(resolve, 800));
+
     try {
       if (isLogin) {
-        // Login request
-        const response = await fetch(`${API_URL}/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Login failed");
+        // Demo Login - accept demo credentials or any input for showcase
+        if (email === DEMO_USER.email && password === DEMO_USER.password) {
+          // Exact demo credentials
+          const user = { id: DEMO_USER.id, name: DEMO_USER.name, email: DEMO_USER.email };
+          setSuccess("Login successful! Welcome back.");
+          localStorage.setItem("user", JSON.stringify(user));
+          if (onSuccess) onSuccess(user);
+          setTimeout(() => onClose(), 1500);
+        } else if (email && password.length >= 6) {
+          // Accept any valid email/password for demo purposes
+          const user = { id: 2, name: email.split('@')[0], email: email };
+          setSuccess("Login successful! Welcome back.");
+          localStorage.setItem("user", JSON.stringify(user));
+          if (onSuccess) onSuccess(user);
+          setTimeout(() => onClose(), 1500);
+        } else {
+          throw new Error("Please enter valid email and password (min 6 characters)");
         }
-
-        setSuccess("Login successful! Welcome back.");
-
-        // Store user in localStorage
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        // Call success callback if provided
-        if (onSuccess) {
-          onSuccess(data.user);
-        }
-
-        // Close modal after a short delay
-        setTimeout(() => {
-          onClose();
-        }, 1500);
-
       } else {
-        // Register request
-        const response = await fetch(`${API_URL}/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Registration failed");
+        // Demo Register - simulate successful registration
+        if (name && email && password.length >= 6) {
+          const user = { id: Date.now(), name: name, email: email };
+          setSuccess("Account created successfully! You can now login.");
+          localStorage.setItem("user", JSON.stringify(user));
+          if (onSuccess) onSuccess(user);
+          setTimeout(() => onClose(), 1500);
+        } else {
+          throw new Error("Please fill all fields (password min 6 characters)");
         }
-
-        setSuccess("Account created successfully! You can now login.");
-
-        // Store user in localStorage
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        // Call success callback if provided
-        if (onSuccess) {
-          onSuccess(data.user);
-        }
-
-        // Close modal after a short delay
-        setTimeout(() => {
-          onClose();
-        }, 1500);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -88,6 +70,7 @@ function LoginModal({ onClose, onSuccess }: LoginModalProps) {
       setLoading(false);
     }
   };
+
 
   const toggleMode = () => {
     setIsLogin(!isLogin);

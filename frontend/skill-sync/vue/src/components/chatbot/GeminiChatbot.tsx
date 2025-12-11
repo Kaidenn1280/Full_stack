@@ -22,6 +22,30 @@ const GeminiChatbot: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Demo responses for showcase (no backend needed)
+  const getDemoResponse = (message: string): string => {
+    const lowerMessage = message.toLowerCase();
+
+    if (lowerMessage.includes("hello") || lowerMessage.includes("hi")) {
+      return "Hello! 👋 I'm a demo chatbot. In the full version, I'm powered by Google's Gemini AI. How can I help you today?";
+    }
+    if (lowerMessage.includes("how are you")) {
+      return "I'm doing great, thank you for asking! 😊 I'm here to demonstrate the chatbot functionality.";
+    }
+    if (lowerMessage.includes("what can you do") || lowerMessage.includes("help")) {
+      return "I'm an AI assistant! In the full version, I can:\n• Answer questions on various topics\n• Help with coding and technical problems\n• Assist with creative writing\n• Provide explanations and tutorials\n\nThis is a demo version for showcase purposes.";
+    }
+    if (lowerMessage.includes("skill") || lowerMessage.includes("learn")) {
+      return "SkillSync is a platform designed to help you learn new skills! 📚\n\nYou can:\n• Browse courses\n• Track your progress\n• Connect with instructors\n• Get AI-powered assistance";
+    }
+    if (lowerMessage.includes("bye") || lowerMessage.includes("goodbye")) {
+      return "Goodbye! 👋 Thanks for chatting with me. Have a great day!";
+    }
+
+    // Default response
+    return `Thanks for your message! 🤖\n\nThis is a demo response. In the production version, I would use Google's Gemini AI to provide intelligent, contextual responses to "${message}".\n\nFeel free to explore the rest of the application!`;
+  };
+
   const sendMessage = async () => {
     const text = input.trim();
     if (!text || loading) return;
@@ -35,42 +59,27 @@ const GeminiChatbot: React.FC = () => {
     setInput("");
     setLoading(true);
 
+    // Simulate network delay for realistic feel
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 500));
+
     try {
-      const res = await fetch("http://localhost:3000/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: text,
-          history: newMessages.map((m) => ({
-            role: m.role === "bot" ? "assistant" : "user",
-            content: m.content,
-          })),
-        }),
-      });
-
-      const data = await res.json();
-
-      if (data.reply) {
-        setMessages((prev) => [
-          ...prev,
-          { role: "bot", content: data.reply },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          { role: "bot", content: "Oops, something went wrong." },
-        ]);
-      }
+      // Demo mode - use mock responses
+      const demoReply = getDemoResponse(text);
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", content: demoReply },
+      ]);
     } catch (err) {
       console.error(err);
       setMessages((prev) => [
         ...prev,
-        { role: "bot", content: "Error talking to server." },
+        { role: "bot", content: "Oops! Something went wrong. Please try again." },
       ]);
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
