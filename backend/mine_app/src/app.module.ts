@@ -9,13 +9,14 @@ import { ChatModule } from './chat/chat.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '', // default XAMPP MySQL password is empty
-      database: 'mine_app',
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '3306'),
+      username: process.env.DB_USERNAME || 'root',
+      password: process.env.DB_PASSWORD || '', // default XAMPP MySQL password is empty
+      database: process.env.DB_DATABASE || 'mine_app',
       autoLoadEntities: true,
-      synchronize: true, // auto-create tables from entities (dev only)
+      synchronize: process.env.NODE_ENV !== 'production', // disable in production
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
     }),
     UserModule,
     ChatModule,
@@ -23,4 +24,4 @@ import { ChatModule } from './chat/chat.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
